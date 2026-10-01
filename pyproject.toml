@@ -1,0 +1,38 @@
+[project]
+name = "bad-batch-gate"
+description = "Does the agent stop a bad batch before it becomes a wrong number? A nightly warehouse load where the loader never errors. Scored from what reached the warehouse, never from what the agent says."
+tags = ["eval", "train", "tool-use", "agent-safety", "data-quality", "data-engineering", "sql", "multi-turn"]
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"   # verifiers 0.3.x stops at 3.13
+license = { text = "MIT" }
+authors = [{ name = "Jigon Yoo" }]
+dependencies = [
+    # The environment is built on verifiers' legacy StatefulToolEnv. Later 0.3.2.dev*
+    # pre-releases on PyPI drop that stack (dev1 still has it, dev99 does not), and
+    # "<0.4" would admit them (PEP 440: 0.3.2.devN < 0.4), e.g. with pip --pre.
+    "verifiers>=0.3.1,<0.3.2.dev0",
+    "datasets>=3.3.0",           # what verifiers 0.3.1 itself requires
+]
+
+[project.urls]
+Repository = "https://github.com/jigonyoo/bad-batch-gate"
+Homepage = "https://jigonyoo.com"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+# tests/ and scripts/ ship in the sdist so the README numbers can be re-run
+# with no API key. The wheel carries the package only.
+include = [
+    "bad_batch_gate/**",
+    "tests/**",
+    "scripts/**",
+    "README.md",
+    "pyproject.toml",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["bad_batch_gate"]
